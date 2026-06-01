@@ -390,6 +390,16 @@ body {
 .ev-field.reg-closed { color: var(--text-light); text-decoration: line-through; }
 .ev-field.reg-urgent { color: var(--red); font-weight: 800; }
 .ev-field.reg-warn   { color: var(--orange); font-weight: 700; }
+.ev-field.ev-tbd     { color: var(--text-mid); font-style: italic; }
+.ev-field.ev-note {
+  font-size: 0.78rem;
+  color: var(--text-mid);
+  font-weight: 600;
+  border-top: 1px solid var(--border);
+  padding-top: 7px;
+  margin-top: 3px;
+  align-items: flex-start;
+}
 
 .ev-loc { align-items: center; gap: 5px 8px; }
 

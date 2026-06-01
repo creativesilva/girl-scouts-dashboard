@@ -115,6 +115,42 @@ const EVENTS = [
     cost: 10, registration: true, registrationCloses: "2026-09-06",
     venue: null, address: "San Luis Obispo, CA 93401",
   },
+  // ── Events from council emails ──────────────────────────────
+  {
+    id: 20, program: "Power of Produce — Farm Adventures", badge: "Power of Produce Patch", level: "All Levels",
+    date: "2026-06-13", start: "1:00 PM", end: "3:00 PM", spots: null,
+    cost: 18, registration: true, registrationCloses: "2026-06-08",
+    venue: "SLO Farm", address: "San Luis Obispo, CA 93401",
+    note: "Includes patch + take-home fruits and veggies. Confirm specific farm address at registration.",
+  },
+  {
+    id: 21, program: "Penguins & Pajamas Overnight", badge: "Special Patch", level: "All Levels",
+    date: "2026-07-25", start: "6:00 PM", end: "8:00 AM", endDate: "2026-07-26", spots: null,
+    cost: 125, registration: true, registrationCloses: "2026-07-18",
+    venue: "California Academy of Sciences", address: "55 Music Concourse Dr, San Francisco, CA 94118",
+    note: "Overnight — Jul 25 6 PM through Jul 26 8 AM, then all-day Academy access until close. Parking $35 not included. Pay with credits: enter under \"Gift Card\" at checkout.",
+  },
+  {
+    id: 22, program: "Santa Barbara Zoo Snooze", badge: "Custom Patch", level: "All Levels",
+    date: "2026-08-08", start: "6:30 PM", end: "11:00 AM", endDate: "2026-08-09", spots: null,
+    cost: 100, registration: true, registrationCloses: "2026-08-01",
+    venue: "Santa Barbara Zoo", address: "500 Niños Dr, Santa Barbara, CA 93103",
+    note: "Overnight — Aug 8 6:30 PM through Aug 9 11 AM, then all-day Zoo access until close. Pay with credits: enter under \"Gift Card\" at checkout.",
+  },
+  {
+    id: 23, program: "Girl Scout Night — LA Sparks vs. Valkyries", badge: "Special Patch (wear uniform)", level: "All Levels",
+    date: "2026-08-09", start: "TBD", end: "TBD", spots: null,
+    cost: null, registration: true, registrationCloses: null,
+    venue: "Crypto.com Arena", address: "1111 S Figueroa St, Los Angeles, CA 90015",
+    note: "Wear uniform for special patch. Credits cannot be used. Register at gofevo.com/event/Girlscouts7062",
+  },
+  {
+    id: 24, program: "The Ravine — Ariella's 500 Club Reward", badge: "(Ariella's Earned Reward)", level: "All Levels",
+    date: "2026-09-19", start: "11:00 AM", end: "4:00 PM", spots: null,
+    cost: 42, registration: true, registrationCloses: "2026-09-05",
+    venue: "The Ravine", address: "2301 Airport Road, Paso Robles, CA 93446",
+    note: "$42/person — Ariella + 1 adult chaperone = $84 total. Check-in 10:30 AM at Upper Parking Lot. Bring sunscreen, towel, swimwear. Pizza + drink included. No outside food.",
+  },
 ];
 
 const ACTIVITIES = [
@@ -223,16 +259,34 @@ function mapsUrl(address) {
 
 // ── EVENT CARD ────────────────────────────────────────────────────────────────
 
+function fmtDateShort(dateStr) {
+  return new Date(dateStr + "T00:00:00").toLocaleDateString("en-US", { month: "short", day: "numeric" });
+}
+
 function eventCard(ev) {
   const days     = daysUntil(ev.date);
   const isPast   = days < 0;
   const levelCls = LEVEL_CLASS[ev.level] || "level-all";
   const isSpecial = ev.badge.startsWith("(");
 
+  // Spots (null = unknown/limited)
+  const spotsHtml = ev.spots != null
+    ? `<span class="ev-spots${ev.spots <= 5 ? " low-spots" : ""}">
+        ${ev.spots <= 5 ? "⚠️" : "👥"} ${ev.spots} spots
+       </span>`
+    : ``;
+
+  // Time — handle overnight (endDate spans to next day)
+  const timeDisplay = ev.endDate
+    ? `${ev.start} – ${fmtDateShort(ev.endDate)} ${ev.end} 🌙`
+    : `${ev.start} – ${ev.end}`;
+
   // Cost
   const costHtml = ev.cost === 0
     ? `<div class="ev-field"><span class="fi">💰</span>Free</div>`
-    : `<div class="ev-field"><span class="fi">💰</span>$${ev.cost} <span class="fn">confirm at registration</span></div>`;
+    : ev.cost != null
+    ? `<div class="ev-field"><span class="fi">💰</span>$${ev.cost} <span class="fn">confirm at registration</span></div>`
+    : `<div class="ev-field ev-tbd"><span class="fi">💰</span>Cost TBD</div>`;
 
   // Registration
   let regHtml = "";
@@ -261,22 +315,26 @@ function eventCard(ev) {
       <a class="maps-btn" href="${mapsUrl(addr)}" target="_blank">Open in Maps ↗</a>
     </div>`;
 
+  // Optional note
+  const noteHtml = ev.note
+    ? `<div class="ev-field ev-note"><span class="fi">ℹ️</span>${ev.note}</div>`
+    : ``;
+
   return `
     <div class="ev-card${isPast ? " is-past" : ""}">
       <div class="ev-top">
         <span class="level-tag ${levelCls}">${ev.level}</span>
         ${countdownBadge(days)}
-        <span class="ev-spots${ev.spots <= 5 ? " low-spots" : ""}">
-          ${ev.spots <= 5 ? "⚠️" : "👥"} ${ev.spots} spots
-        </span>
+        ${spotsHtml}
       </div>
       <div class="ev-name">${ev.program}</div>
       <div class="ev-badge${isSpecial ? "" : " has-badge"}">${ev.badge}</div>
       <div class="ev-fields">
-        <div class="ev-field"><span class="fi">🕐</span>${ev.start} – ${ev.end}</div>
+        <div class="ev-field"><span class="fi">🕐</span>${timeDisplay}</div>
         ${costHtml}
         ${regHtml}
         ${locHtml}
+        ${noteHtml}
       </div>
     </div>`;
 }
