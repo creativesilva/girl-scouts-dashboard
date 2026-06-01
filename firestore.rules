@@ -1,0 +1,9 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Girl Scouts Dashboard — allow full access (private family app)
+    match /progress/{document=**} {
+      allow read, write: if true;
+    }
+  }
+}

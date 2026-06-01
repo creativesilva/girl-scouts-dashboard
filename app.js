@@ -1,3 +1,20 @@
+// ── FIREBASE ─────────────────────────────────────────────────────────────────
+
+firebase.initializeApp({
+  apiKey:            "AIzaSyCXVzzAeh3U-RwYaKzCXOTBiNAarHWNqVo",
+  authDomain:        "girl-scouts-silva.firebaseapp.com",
+  projectId:         "girl-scouts-silva",
+  storageBucket:     "girl-scouts-silva.firebasestorage.app",
+  messagingSenderId: "662350541127",
+  appId:             "1:662350541127:web:174dd8e1114695d8dadc62",
+});
+
+const db          = firebase.firestore();
+const progressRef = db.collection("progress").doc("ariella");
+
+// Offline persistence — works even with no internet
+db.enablePersistence().catch(() => {});
+
 // ── DATA ─────────────────────────────────────────────────────────────────────
 
 const EVENTS = [
@@ -493,11 +510,27 @@ function renderList() {
 
 // ── CHALLENGE ─────────────────────────────────────────────────────────────────
 
+// Seed from localStorage instantly (before Firestore responds)
 const state = {
   ariella: new Set(JSON.parse(localStorage.getItem("gs_ariella") || "[]")),
 };
 
+// Real-time Firestore sync — fires on load and on any change from any device
+progressRef.onSnapshot(snap => {
+  // Only overwrite local state when Firestore has real data for this document
+  if (snap.exists) {
+    const completed = snap.data().completed || [];
+    state.ariella = new Set(completed);
+    localStorage.setItem("gs_ariella", JSON.stringify(completed));
+    updateProgress();
+    ACTIVITIES.forEach(a => updateRow(a.id));
+  }
+}, err => {
+  console.warn("Firestore sync unavailable, using local state:", err.code);
+});
+
 function save() {
+  progressRef.set({ completed: [...state.ariella] });
   localStorage.setItem("gs_ariella", JSON.stringify([...state.ariella]));
 }
 
