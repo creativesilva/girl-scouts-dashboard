@@ -104,13 +104,11 @@ const LEVEL_CLASS = {
 let filter = "all";
 
 const state = {
-  ariella:   new Set(JSON.parse(localStorage.getItem("gs_ariella")   || "[]")),
-  valentina: new Set(JSON.parse(localStorage.getItem("gs_valentina") || "[]")),
+  ariella: new Set(JSON.parse(localStorage.getItem("gs_ariella") || "[]")),
 };
 
 function save() {
-  localStorage.setItem("gs_ariella",   JSON.stringify([...state.ariella]));
-  localStorage.setItem("gs_valentina", JSON.stringify([...state.valentina]));
+  localStorage.setItem("gs_ariella", JSON.stringify([...state.ariella]));
 }
 
 // ── HELPERS ───────────────────────────────────────────────────────────────────
@@ -225,20 +223,14 @@ function renderChallenge() {
 }
 
 function activityRow(a) {
-  const ac = state.ariella.has(a.id);
-  const vc = state.valentina.has(a.id);
+  const checked = state.ariella.has(a.id);
   return `
-<div class="activity-row ${ac && vc ? "both-done" : ""}" id="row-${a.id}">
+<div class="activity-row ${checked ? "done" : ""}" id="row-${a.id}">
   <div class="act-num">${a.id}</div>
   <div class="act-text">${a.text}</div>
   <div class="act-checks">
-    <button class="check-btn ${ac ? "checked" : ""}" data-id="${a.id}" data-who="ariella" title="Ariella">
-      <span class="btn-initial">A</span>
-      <span class="btn-check">${ac ? "✓" : ""}</span>
-    </button>
-    <button class="check-btn ${vc ? "checked" : ""}" data-id="${a.id}" data-who="valentina" title="Valentina">
-      <span class="btn-initial">V</span>
-      <span class="btn-check">${vc ? "✓" : ""}</span>
+    <button class="check-btn ${checked ? "checked" : ""}" data-id="${a.id}" data-who="ariella" title="Mark done">
+      <span class="btn-check">${checked ? "✓" : ""}</span>
     </button>
   </div>
 </div>`;
@@ -247,32 +239,25 @@ function activityRow(a) {
 function updateRow(id) {
   const row = document.getElementById(`row-${id}`);
   if (!row) return;
-  const ac = state.ariella.has(id);
-  const vc = state.valentina.has(id);
-  row.className = `activity-row ${ac && vc ? "both-done" : ""}`;
-  row.querySelectorAll(".check-btn").forEach(btn => {
-    const who = btn.dataset.who;
-    const checked = state[who].has(id);
-    btn.className = `check-btn ${checked ? "checked" : ""}`;
-    btn.querySelector(".btn-check").textContent = checked ? "✓" : "";
-  });
+  const checked = state.ariella.has(id);
+  row.className = `activity-row ${checked ? "done" : ""}`;
+  const btn = row.querySelector(".check-btn");
+  btn.className = `check-btn ${checked ? "checked" : ""}`;
+  btn.querySelector(".btn-check").textContent = checked ? "✓" : "";
 }
 
 function updateProgress() {
-  ["ariella", "valentina"].forEach(who => {
-    const n = state[who].size;
-    const pct = (n / 50) * 100;
-    document.getElementById(`bar-${who}`).style.width = `${pct}%`;
-    document.getElementById(`count-${who}`).textContent = `${n} / 50 activities`;
-    const patchEl = document.getElementById(`patch-${who}`);
-    if (n >= 25) {
-      patchEl.textContent = "🏅 Patch earned!";
-      patchEl.className = "pc-patch earned";
-    } else {
-      patchEl.textContent = `${25 - n} more for patch`;
-      patchEl.className = "pc-patch";
-    }
-  });
+  const n = state.ariella.size;
+  document.getElementById("bar-ariella").style.width = `${(n / 50) * 100}%`;
+  document.getElementById("count-ariella").textContent = `${n} / 50 activities`;
+  const patchEl = document.getElementById("patch-ariella");
+  if (n >= 25) {
+    patchEl.textContent = "🏅 Patch earned!";
+    patchEl.className = "pc-patch earned";
+  } else {
+    patchEl.textContent = `${25 - n} more for patch`;
+    patchEl.className = "pc-patch";
+  }
 }
 
 // ── WIRE UP: TABS ─────────────────────────────────────────────────────────────
