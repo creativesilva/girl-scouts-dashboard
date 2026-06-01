@@ -353,14 +353,15 @@ function eventCard(ev) {
     regHtml = `<div class="ev-field"><span class="fi">✅</span>No registration needed</div>`;
   }
 
-  // Location + Maps
+  // Location + Maps + Google Calendar
   const locLabel = ev.venue || "San Luis Obispo, CA";
   const addr     = ev.address || "San Luis Obispo, CA 93401";
   const locHtml  = `
     <div class="ev-field ev-loc">
       <span class="fi">📍</span>
       <span>${locLabel}</span>
-      <a class="maps-btn" href="${mapsUrl(addr)}" target="_blank">Open in Maps ↗</a>
+      <a class="maps-btn" href="${mapsUrl(addr)}" target="_blank">Maps ↗</a>
+      <a class="gcal-btn" href="${gcalLink(ev)}" target="_blank">+ Google Cal</a>
     </div>`;
 
   // Optional note
@@ -385,6 +386,87 @@ function eventCard(ev) {
         ${noteHtml}
       </div>
     </div>`;
+}
+
+// ── GOOGLE CALENDAR EXPORT ────────────────────────────────────────────────────
+
+function toGcalDt(dateStr, timeStr) {
+  if (!timeStr || timeStr === "TBD") return null;
+  const [y, m, d] = dateStr.split('-');
+  const match = timeStr.match(/^(\d+):(\d+)\s*(AM|PM)$/i);
+  if (!match) return null;
+  let [, h, min, ampm] = match;
+  h = parseInt(h); min = parseInt(min);
+  if (ampm.toUpperCase() === 'PM' && h !== 12) h += 12;
+  if (ampm.toUpperCase() === 'AM' && h === 12) h = 0;
+  return `${y}${m}${d}T${String(h).padStart(2,'0')}${String(min).padStart(2,'0')}00`;
+}
+
+function gcalLink(ev) {
+  const startDt = toGcalDt(ev.date, ev.start);
+  const endDt   = toGcalDt(ev.endDate || ev.date, ev.end);
+  const dates   = startDt
+    ? `${startDt}/${endDt || startDt}`
+    : `${ev.date.replace(/-/g,'')}/${ev.date.replace(/-/g,'')}`;
+
+  const details = [
+    !ev.badge.startsWith('(') ? `Badge/Patch: ${ev.badge}` : null,
+    `Level: ${ev.level}`,
+    ev.cost != null ? `Cost: $${ev.cost}` : null,
+    ev.registrationCloses ? `Register by: ${fmtDate(ev.registrationCloses)}` : null,
+    ev.note || null,
+  ].filter(Boolean).join('\n');
+
+  return `https://calendar.google.com/calendar/render?action=TEMPLATE`
+    + `&text=${encodeURIComponent(ev.program)}`
+    + `&dates=${dates}`
+    + `&details=${encodeURIComponent(details)}`
+    + `&location=${encodeURIComponent(ev.address || 'San Luis Obispo, CA')}`
+    + `&ctz=America%2FLos_Angeles`;
+}
+
+function downloadIcs() {
+  const esc = s => s.replace(/\\/g,'\\\\').replace(/;/g,'\\;').replace(/,/g,'\\,').replace(/\n/g,'\\n');
+  const lines = [
+    'BEGIN:VCALENDAR','VERSION:2.0',
+    'PRODID:-//Girl Scouts//Ariella Silva//EN',
+    'CALSCALE:GREGORIAN',
+    'X-WR-CALNAME:Girl Scouts - Ariella 2026',
+    'X-WR-TIMEZONE:America/Los_Angeles',
+  ];
+
+  EVENTS.forEach(ev => {
+    const startDt = toGcalDt(ev.date, ev.start);
+    const endDt   = toGcalDt(ev.endDate || ev.date, ev.end);
+    if (!startDt) return;
+
+    const desc = [
+      !ev.badge.startsWith('(') ? `Badge: ${ev.badge}` : null,
+      `Level: ${ev.level}`,
+      ev.cost != null ? `Cost: $${ev.cost}` : null,
+      ev.registrationCloses ? `Register by: ${fmtDate(ev.registrationCloses)}` : null,
+      ev.note || null,
+    ].filter(Boolean).join('\\n');
+
+    lines.push(
+      'BEGIN:VEVENT',
+      `DTSTART;TZID=America/Los_Angeles:${startDt}`,
+      `DTEND;TZID=America/Los_Angeles:${endDt || startDt}`,
+      `SUMMARY:${esc(ev.program)}`,
+      ...(desc  ? [`DESCRIPTION:${desc}`]  : []),
+      ...(ev.address ? [`LOCATION:${esc(ev.address)}`] : []),
+      `UID:gs-ariella-${ev.id}@girl-scouts-silva`,
+      'END:VEVENT',
+    );
+  });
+
+  lines.push('END:VCALENDAR');
+
+  const blob = new Blob([lines.join('\r\n')], { type: 'text/calendar;charset=utf-8' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'girl-scouts-ariella-2026.ics';
+  a.click();
 }
 
 // ── CALENDAR ──────────────────────────────────────────────────────────────────

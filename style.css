@@ -417,6 +417,43 @@ body {
 
 .maps-btn:hover { background: var(--green-dark); }
 
+.gcal-btn {
+  background: #1A73E8;
+  color: white;
+  text-decoration: none;
+  padding: 3px 11px;
+  border-radius: 12px;
+  font-size: 0.74rem;
+  font-weight: 800;
+  transition: background 0.15s;
+  white-space: nowrap;
+}
+.gcal-btn:hover { background: #1557B0; }
+
+.events-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.ics-btn {
+  background: var(--white);
+  border: 2px solid var(--border);
+  border-radius: 20px;
+  padding: 7px 16px;
+  font-family: inherit;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--text-mid);
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+.ics-btn:hover { border-color: #1A73E8; color: #1A73E8; }
+
 /* ── LEVEL + COUNTDOWN TAGS ─────────────────────────────── */
 .level-tag {
   font-size: 0.7rem;
