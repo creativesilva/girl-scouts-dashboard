@@ -38,13 +38,44 @@
 
       <!-- EVENTS TAB -->
       <section id="tab-events" class="tab-panel">
-        <div class="filter-row">
-          <span class="filter-label">Show:</span>
-          <button class="filter-btn active" data-filter="all">All Eligible</button>
-          <button class="filter-btn" data-filter="daisy-only">Daisy Only</button>
-          <button class="filter-btn" data-filter="upcoming">Next 30 Days</button>
+
+        <div class="view-toggle">
+          <button class="view-btn active" data-view="calendar">📅 Calendar</button>
+          <button class="view-btn" data-view="list">☰ All Events</button>
         </div>
-        <div id="events-grid" class="events-grid"></div>
+
+        <!-- CALENDAR VIEW -->
+        <div id="view-calendar">
+          <div class="cal-card">
+            <div class="cal-nav">
+              <button class="cal-nav-btn" id="cal-prev">&#8249;</button>
+              <div class="cal-title" id="cal-title"></div>
+              <button class="cal-nav-btn" id="cal-next">&#8250;</button>
+            </div>
+            <div class="cal-dow">
+              <span>Sun</span><span>Mon</span><span>Tue</span>
+              <span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span>
+            </div>
+            <div id="cal-grid" class="cal-grid"></div>
+            <div class="cal-legend">
+              <span class="cal-ind level-all"></span><span>Event</span>
+              <span class="cal-ind cal-ind-reg"></span><span>Registration deadline</span>
+            </div>
+          </div>
+          <div id="cal-detail"></div>
+        </div>
+
+        <!-- LIST VIEW -->
+        <div id="view-list" class="hidden">
+          <div class="filter-row">
+            <span class="filter-label">Show:</span>
+            <button class="filter-btn active" data-filter="all">All Eligible</button>
+            <button class="filter-btn" data-filter="daisy-only">Daisy Only</button>
+            <button class="filter-btn" data-filter="upcoming">Next 30 Days</button>
+          </div>
+          <div id="events-list" class="events-list"></div>
+        </div>
+
       </section>
 
       <!-- CHALLENGE TAB -->
