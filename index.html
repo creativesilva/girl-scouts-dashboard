@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Girl Scouts | Ariella &amp; Valentina</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header class="header">
+    <div class="container header-inner">
+      <div class="header-brand">
+        <img src="Assets/Trefoil_White.png" alt="Girl Scouts trefoil" class="logo">
+        <div>
+          <div class="header-title">Girl Scouts Dashboard</div>
+          <div class="header-sub">Ariella &amp; Valentina · San Luis Obispo 2026</div>
+        </div>
+      </div>
+      <div class="header-chips">
+        <div class="chip" id="chip-events">— events upcoming</div>
+        <div class="chip" id="chip-days">— days left in challenge</div>
+      </div>
+    </div>
+  </header>
+
+  <div class="tabs-bar">
+    <div class="container">
+      <button class="tab active" data-tab="events">📅 Events</button>
+      <button class="tab" data-tab="challenge">🌿 Outdoors Challenge</button>
+    </div>
+  </div>
+
+  <main class="main">
+    <div class="container">
+
+      <!-- EVENTS TAB -->
+      <section id="tab-events" class="tab-panel">
+        <div class="filter-row">
+          <span class="filter-label">Show:</span>
+          <button class="filter-btn active" data-filter="all">All Eligible</button>
+          <button class="filter-btn" data-filter="daisy-only">Daisy Only</button>
+          <button class="filter-btn" data-filter="upcoming">Next 30 Days</button>
+        </div>
+        <div id="events-grid" class="events-grid"></div>
+      </section>
+
+      <!-- CHALLENGE TAB -->
+      <section id="tab-challenge" class="tab-panel hidden">
+        <div class="challenge-banner">
+          <div class="challenge-text">
+            <h2>Love the Outdoors Challenge 2026</h2>
+            <p>Complete at least <strong>25 of 50 activities</strong> to earn the patch. Challenge runs June 1 through September 2026. Tag activities on Instagram with <strong>#gsoutdoors</strong>.</p>
+          </div>
+          <div class="progress-cards">
+            <div class="progress-card">
+              <div class="pc-name">Ariella</div>
+              <div class="pc-track"><div class="pc-fill" id="bar-ariella"></div></div>
+              <div class="pc-meta">
+                <span id="count-ariella">0 / 50</span>
+                <span class="pc-patch" id="patch-ariella"></span>
+              </div>
+            </div>
+            <div class="progress-card">
+              <div class="pc-name">Valentina</div>
+              <div class="pc-track"><div class="pc-fill" id="bar-valentina"></div></div>
+              <div class="pc-meta">
+                <span id="count-valentina">0 / 50</span>
+                <span class="pc-patch" id="patch-valentina"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="check-legend">
+          <span>Tap buttons to check off each activity:</span>
+          <span class="legend-demo unchecked">A</span><span class="legend-text">Ariella</span>
+          <span class="legend-demo unchecked">V</span><span class="legend-text">Valentina</span>
+        </div>
+
+        <div id="activities-list"></div>
+      </section>
+
+    </div>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
