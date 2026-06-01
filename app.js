@@ -231,33 +231,17 @@ const ARIELLA = {
   level: "Daisy",
 };
 
-const TROOP_GIRLS = [
-  "Ariella Silva",
-  "Camila Gonzalez",
-  "Cora Beyeler",
-  "Hannah Zich",
-  "Isabella Kerr-pardo",
-  "Kameron Lovato",
-  "Nina Muranaka Flores",
-  "Savannah Brown",
-  "Yessenia Castellanos",
-];
-
-const TROOP_LEADER = {
-  name: "Julia Goldstein",
-  phone: "(818) 489-8636",
-  email: "gstroop55805@gmail.com",
-};
-
-const TROOP_ADULTS = [
-  { name: "Chris Silva",              phone: null,             girl: "Ariella Silva"        },
-  { name: "Danielle Kerr",            phone: "(820) 899-0974", girl: "Isabella Kerr-pardo"  },
-  { name: "Diana Flores De Muranaka", phone: "(805) 503-9709", girl: "Nina Muranaka Flores" },
-  { name: "Gwen Beyeler",             phone: "(707) 812-0823", girl: "Cora Beyeler"          },
-  { name: "Marie Brown",              phone: "(818) 601-6805", girl: "Savannah Brown"        },
-  { name: "Meagan Lovato",            phone: "(805) 765-0092", girl: "Kameron Lovato"        },
-  { name: "Nina",                     phone: "(714) 884-5447", girl: "Hannah Zich"           },
-  { name: "Yessenia Castellanos",     phone: "(805) 728-0036", girl: "Camila Gonzalez"       },
+// Parent + Girl Scout paired together per family
+const TROOP_FAMILIES = [
+  { parent: { name: "Chris Silva",              phone: "(805) 720-2123"                                               }, girl: "Ariella Silva"        },
+  { parent: { name: "Danielle Kerr",            phone: "(820) 899-0974"                                               }, girl: "Isabella Kerr-pardo"  },
+  { parent: { name: "Diana Flores De Muranaka", phone: "(805) 503-9709"                                               }, girl: "Nina Muranaka Flores" },
+  { parent: { name: "Gwen Beyeler",             phone: "(707) 812-0823"                                               }, girl: "Cora Beyeler"          },
+  { parent: { name: "Julia Goldstein",          phone: "(818) 489-8636", leader: true, email: "gstroop55805@gmail.com" }, girl: "Avigail Goldstein"    },
+  { parent: { name: "Marie Brown",              phone: "(818) 601-6805"                                               }, girl: "Savannah Brown"        },
+  { parent: { name: "Meagan Lovato",            phone: "(805) 765-0092"                                               }, girl: "Kameron Lovato"        },
+  { parent: { name: "Nina",                     phone: "(714) 884-5447"                                               }, girl: "Hannah Zich"           },
+  { parent: { name: "Yessenia Castellanos",     phone: "(805) 728-0036"                                               }, girl: "Camila Gonzalez"       },
 ];
 
 const CATEGORIES = {
@@ -763,6 +747,31 @@ function renderTroop() {
       </div>`;
   }
 
+  function familyRow(fam) {
+    const p = fam.parent;
+    const gName = fam.girl;
+    const isMine = p.name === "Chris Silva";
+    return `
+      <div class="family-row${isMine ? " is-mine" : ""}${p.leader ? " is-leader" : ""}">
+        <div class="family-parent">
+          <div class="avatar adult-avatar" style="background:${avatarColor(p.name)}">${initials(p.name)}</div>
+          <div class="member-info">
+            ${p.leader ? `<div class="leader-inline-badge">★ Troop Leader</div>` : ""}
+            <div class="member-name">${p.name}</div>
+            ${tel(p.phone)}
+            ${p.email ? `<a class="member-email" href="mailto:${p.email}">${p.email}</a>` : ""}
+          </div>
+        </div>
+        <div class="family-girl">
+          <div class="avatar" style="background:${avatarColor(gName)}">${initials(gName)}</div>
+          <div class="member-info">
+            <div class="member-name">${gName}${gName === ARIELLA.name ? " ⭐" : ""}</div>
+            <div class="member-girl-label">🌼 Daisy</div>
+          </div>
+        </div>
+      </div>`;
+  }
+
   document.getElementById("troop-content").innerHTML = `
 
     <div class="profile-card">
@@ -777,31 +786,18 @@ function renderTroop() {
       </div>
     </div>
 
-    <div class="leader-card">
-      <div class="avatar" style="background:${avatarColor(TROOP_LEADER.name)};width:42px;height:42px;font-size:0.8rem;flex-shrink:0">${initials(TROOP_LEADER.name)}</div>
-      <div class="member-info">
-        <div class="leader-title">Troop Leader</div>
-        <div class="member-name">${TROOP_LEADER.name}</div>
-        ${tel(TROOP_LEADER.phone)}
-        <a class="member-email" href="mailto:${TROOP_LEADER.email}">${TROOP_LEADER.email}</a>
-      </div>
-    </div>
-
     <div class="age-table-card">
       <div class="age-table-title">Ariella's Age at Upcoming Events</div>
       ${ageRows}
       ${upcoming.length > 6 ? `<div class="age-more">+ ${upcoming.length - 6} more events</div>` : ""}
     </div>
 
-    <div class="troop-grid">
-      <div class="troop-col-card">
-        <div class="troop-col-header">🌼 Girl Scouts <span class="troop-count">${TROOP_GIRLS.length}</span></div>
-        ${TROOP_GIRLS.map(girlCard).join("")}
+    <div class="family-list">
+      <div class="family-list-header">
+        <span>👤 Parent · Phone</span>
+        <span>🌼 Girl Scout</span>
       </div>
-      <div class="troop-col-card">
-        <div class="troop-col-header">👤 Adults &amp; Parents <span class="troop-count">${TROOP_ADULTS.length}</span></div>
-        ${TROOP_ADULTS.map(adultCard).join("")}
-      </div>
+      ${TROOP_FAMILIES.map(familyRow).join("")}
     </div>`;
 }
 

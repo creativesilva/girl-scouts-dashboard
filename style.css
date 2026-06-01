@@ -797,6 +797,78 @@ body {
   margin-bottom: 1px;
 }
 
+/* ── FAMILY LIST (unified parent + girl rows) ─────── */
+.family-list {
+  background: var(--white);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+
+.family-list-header {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  background: var(--green-light);
+  border-bottom: 2px solid var(--border);
+  padding: 0;
+}
+
+.family-list-header span {
+  padding: 9px 16px;
+  font-size: 0.7rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--green-dark);
+}
+
+.family-list-header span:first-child {
+  border-right: 1px solid var(--border);
+}
+
+.family-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border-bottom: 1px solid var(--border);
+  transition: background 0.12s;
+}
+
+.family-row:last-child { border-bottom: none; }
+.family-row:hover { background: var(--bg); }
+.family-row.is-mine { background: var(--gold-bg); border-left: 3px solid var(--gold); }
+.family-row.is-leader { background: rgba(0,132,61,0.04); }
+
+.family-parent {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 14px;
+  border-right: 1px solid var(--border);
+}
+
+.family-girl {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 14px;
+}
+
+.leader-inline-badge {
+  font-size: 0.65rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #795548;
+  margin-bottom: 1px;
+}
+
+.member-girl-label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--green-dark);
+  margin-top: 1px;
+}
+
 /* ── RESPONSIVE ─────────────────────────────────────────── */
 @media (max-width: 600px) {
   .header-inner { flex-direction: column; align-items: flex-start; gap: 10px; }
