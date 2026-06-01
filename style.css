@@ -754,7 +754,48 @@ body {
 }
 
 .adult-avatar { opacity: 0.72; }
+
+.member-info { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
 .member-name { font-size: 0.83rem; font-weight: 700; color: var(--text); line-height: 1.3; }
+.member-girl { font-size: 0.74rem; font-weight: 600; color: var(--green-dark); }
+.member-phone {
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: #1A73E8;
+  text-decoration: none;
+}
+.member-phone:hover { text-decoration: underline; }
+.member-phone-na { font-size: 0.74rem; color: var(--text-light); font-style: italic; }
+.member-email {
+  font-size: 0.74rem;
+  font-weight: 600;
+  color: var(--text-mid);
+  text-decoration: none;
+  word-break: break-all;
+}
+.member-email:hover { text-decoration: underline; }
+
+/* Troop leader card */
+.leader-card {
+  background: var(--white);
+  border-radius: var(--radius);
+  padding: 16px 18px;
+  box-shadow: var(--shadow);
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  border-left: 4px solid var(--gold);
+}
+
+.leader-title {
+  font-size: 0.68rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--text-light);
+  margin-bottom: 1px;
+}
 
 /* ── RESPONSIVE ─────────────────────────────────────────── */
 @media (max-width: 600px) {

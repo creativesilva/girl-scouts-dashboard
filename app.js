@@ -243,15 +243,21 @@ const TROOP_GIRLS = [
   "Yessenia Castellanos",
 ];
 
+const TROOP_LEADER = {
+  name: "Julia Goldstein",
+  phone: "(818) 489-8636",
+  email: "gstroop55805@gmail.com",
+};
+
 const TROOP_ADULTS = [
-  "Chris Silva",
-  "Danielle Kerr",
-  "Diana Flores De Muranaka",
-  "Gwen Beyeler",
-  "Justina Walch",
-  "Marie Brown",
-  "Michael Muranaka",
-  "Noah Beyeler",
+  { name: "Chris Silva",              phone: null,             girl: "Ariella Silva"        },
+  { name: "Danielle Kerr",            phone: "(820) 899-0974", girl: "Isabella Kerr-pardo"  },
+  { name: "Diana Flores De Muranaka", phone: "(805) 503-9709", girl: "Nina Muranaka Flores" },
+  { name: "Gwen Beyeler",             phone: "(707) 812-0823", girl: "Cora Beyeler"          },
+  { name: "Marie Brown",              phone: "(818) 601-6805", girl: "Savannah Brown"        },
+  { name: "Meagan Lovato",            phone: "(805) 765-0092", girl: "Kameron Lovato"        },
+  { name: "Nina",                     phone: "(714) 884-5447", girl: "Hannah Zich"           },
+  { name: "Yessenia Castellanos",     phone: "(805) 728-0036", girl: "Camila Gonzalez"       },
 ];
 
 const CATEGORIES = {
@@ -710,6 +716,12 @@ function avatarColor(name) {
   return palette[n % palette.length];
 }
 
+function tel(phone) {
+  if (!phone) return "";
+  const digits = phone.replace(/\D/g, "");
+  return `<a class="member-phone" href="tel:+1${digits}">${phone}</a>`;
+}
+
 function renderTroop() {
   const currentAge    = ageOn(ARIELLA.birthday, TODAY);
   const nextBdayDays  = daysToNextBirthday(ARIELLA.birthday);
@@ -717,7 +729,6 @@ function renderTroop() {
     .toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" });
   const nextBdayYear  = TODAY.getMonth() >= 1 ? TODAY.getFullYear() + 1 : TODAY.getFullYear();
 
-  // Age at each upcoming event (useful reference)
   const upcoming = EVENTS.filter(e => daysUntil(e.date) >= 0).sort((a,b) => a.date.localeCompare(b.date));
   const ageRows = upcoming.slice(0, 6).map(e => {
     const age = ageOn(ARIELLA.birthday, new Date(e.date + "T00:00:00"));
@@ -728,13 +739,27 @@ function renderTroop() {
     </div>`;
   }).join("");
 
-  function memberCard(name) {
+  function girlCard(name) {
     const isAriella = name === ARIELLA.name;
-    const color = avatarColor(name);
     return `
       <div class="member-card${isAriella ? " is-ariella" : ""}">
-        <div class="avatar" style="background:${color}">${initials(name)}</div>
-        <div class="member-name">${name}${isAriella ? " ⭐" : ""}</div>
+        <div class="avatar" style="background:${avatarColor(name)}">${initials(name)}</div>
+        <div class="member-info">
+          <div class="member-name">${name}${isAriella ? " ⭐" : ""}</div>
+        </div>
+      </div>`;
+  }
+
+  function adultCard(a) {
+    const isChris = a.name === "Chris Silva";
+    return `
+      <div class="member-card${isChris ? " is-ariella" : ""}">
+        <div class="avatar adult-avatar" style="background:${avatarColor(a.name)}">${initials(a.name)}</div>
+        <div class="member-info">
+          <div class="member-name">${a.name}${isChris ? " ⭐" : ""}</div>
+          ${a.girl ? `<div class="member-girl">↳ ${a.girl.split(" ")[0]}</div>` : ""}
+          ${a.phone ? tel(a.phone) : `<span class="member-phone-na">no number on file</span>`}
+        </div>
       </div>`;
   }
 
@@ -746,9 +771,19 @@ function renderTroop() {
       </div>
       <div class="profile-info">
         <div class="profile-name">${ARIELLA.name}</div>
-        <div class="profile-level">🌼 ${ARIELLA.level} · Girl Scouts of California's Central Coast</div>
+        <div class="profile-level">🌼 ${ARIELLA.level} · Troop 55805 · GSCCC</div>
         <div class="profile-bday">🎂 Born ${bdayFormatted} · <strong>Age ${currentAge}</strong></div>
         <div class="profile-next">🎉 Next birthday: Feb 4, ${nextBdayYear} · ${nextBdayDays} days away</div>
+      </div>
+    </div>
+
+    <div class="leader-card">
+      <div class="avatar" style="background:${avatarColor(TROOP_LEADER.name)};width:42px;height:42px;font-size:0.8rem;flex-shrink:0">${initials(TROOP_LEADER.name)}</div>
+      <div class="member-info">
+        <div class="leader-title">Troop Leader</div>
+        <div class="member-name">${TROOP_LEADER.name}</div>
+        ${tel(TROOP_LEADER.phone)}
+        <a class="member-email" href="mailto:${TROOP_LEADER.email}">${TROOP_LEADER.email}</a>
       </div>
     </div>
 
@@ -761,15 +796,11 @@ function renderTroop() {
     <div class="troop-grid">
       <div class="troop-col-card">
         <div class="troop-col-header">🌼 Girl Scouts <span class="troop-count">${TROOP_GIRLS.length}</span></div>
-        ${TROOP_GIRLS.map(memberCard).join("")}
+        ${TROOP_GIRLS.map(girlCard).join("")}
       </div>
       <div class="troop-col-card">
         <div class="troop-col-header">👤 Adults &amp; Parents <span class="troop-count">${TROOP_ADULTS.length}</span></div>
-        ${TROOP_ADULTS.map(name => `
-          <div class="member-card">
-            <div class="avatar adult-avatar" style="background:${avatarColor(name)}">${initials(name)}</div>
-            <div class="member-name">${name}</div>
-          </div>`).join("")}
+        ${TROOP_ADULTS.map(adultCard).join("")}
       </div>
     </div>`;
 }
