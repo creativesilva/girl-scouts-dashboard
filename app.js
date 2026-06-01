@@ -206,6 +206,37 @@ const ACTIVITIES = [
   { id: 37, text: "On a hot day, make your own ice pops",                                                        cat: "cooking"  },
 ];
 
+// ── TROOP DATA ────────────────────────────────────────────────────────────────
+
+const ARIELLA = {
+  name: "Ariella Silva",
+  birthday: "2019-02-04",
+  level: "Daisy",
+};
+
+const TROOP_GIRLS = [
+  "Ariella Silva",
+  "Camila Gonzalez",
+  "Cora Beyeler",
+  "Hannah Zich",
+  "Isabella Kerr-pardo",
+  "Kameron Lovato",
+  "Nina Muranaka Flores",
+  "Savannah Brown",
+  "Yessenia Castellanos",
+];
+
+const TROOP_ADULTS = [
+  "Chris Silva",
+  "Danielle Kerr",
+  "Diana Flores De Muranaka",
+  "Gwen Beyeler",
+  "Justina Walch",
+  "Marie Brown",
+  "Michael Muranaka",
+  "Noah Beyeler",
+];
+
 const CATEGORIES = {
   outdoors: { label: "Outdoors",  icon: "🏕️" },
   nature:   { label: "Nature",    icon: "🌿" },
@@ -535,6 +566,99 @@ function updateProgress() {
   el.className    = `pc-patch${n >= 25 ? " earned" : ""}`;
 }
 
+// ── TROOP ─────────────────────────────────────────────────────────────────────
+
+function ageOn(birthdayStr, refDate) {
+  const b = new Date(birthdayStr + "T00:00:00");
+  let age = refDate.getFullYear() - b.getFullYear();
+  const m = refDate.getMonth() - b.getMonth();
+  if (m < 0 || (m === 0 && refDate.getDate() < b.getDate())) age--;
+  return age;
+}
+
+function daysToNextBirthday(birthdayStr) {
+  const b = new Date(birthdayStr + "T00:00:00");
+  let next = new Date(TODAY.getFullYear(), b.getMonth(), b.getDate());
+  if (next <= TODAY) next.setFullYear(TODAY.getFullYear() + 1);
+  return Math.round((next - TODAY) / 86400000);
+}
+
+function initials(name) {
+  const parts = name.trim().split(/\s+/);
+  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+}
+
+function avatarColor(name) {
+  const palette = ["#00843D","#1565C0","#6A1B9A","#E65100","#00695C","#AD1457","#4527A0","#37474F","#BF360C","#1B5E20"];
+  let n = 0;
+  for (let i = 0; i < name.length; i++) n += name.charCodeAt(i);
+  return palette[n % palette.length];
+}
+
+function renderTroop() {
+  const currentAge    = ageOn(ARIELLA.birthday, TODAY);
+  const nextBdayDays  = daysToNextBirthday(ARIELLA.birthday);
+  const bdayFormatted = new Date(ARIELLA.birthday + "T00:00:00")
+    .toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" });
+  const nextBdayYear  = TODAY.getMonth() >= 1 ? TODAY.getFullYear() + 1 : TODAY.getFullYear();
+
+  // Age at each upcoming event (useful reference)
+  const upcoming = EVENTS.filter(e => daysUntil(e.date) >= 0).sort((a,b) => a.date.localeCompare(b.date));
+  const ageRows = upcoming.slice(0, 6).map(e => {
+    const age = ageOn(ARIELLA.birthday, new Date(e.date + "T00:00:00"));
+    return `<div class="age-row">
+      <span class="age-event">${e.program}</span>
+      <span class="age-date">${fmtDate(e.date)}</span>
+      <span class="age-val">Age ${age}</span>
+    </div>`;
+  }).join("");
+
+  function memberCard(name) {
+    const isAriella = name === ARIELLA.name;
+    const color = avatarColor(name);
+    return `
+      <div class="member-card${isAriella ? " is-ariella" : ""}">
+        <div class="avatar" style="background:${color}">${initials(name)}</div>
+        <div class="member-name">${name}${isAriella ? " ⭐" : ""}</div>
+      </div>`;
+  }
+
+  document.getElementById("troop-content").innerHTML = `
+
+    <div class="profile-card">
+      <div class="profile-trefoil">
+        <img src="Assets/Trefoil_White.png" alt="" style="width:48px;filter:brightness(0) invert(1);opacity:0.9">
+      </div>
+      <div class="profile-info">
+        <div class="profile-name">${ARIELLA.name}</div>
+        <div class="profile-level">🌼 ${ARIELLA.level} · Girl Scouts of California's Central Coast</div>
+        <div class="profile-bday">🎂 Born ${bdayFormatted} · <strong>Age ${currentAge}</strong></div>
+        <div class="profile-next">🎉 Next birthday: Feb 4, ${nextBdayYear} · ${nextBdayDays} days away</div>
+      </div>
+    </div>
+
+    <div class="age-table-card">
+      <div class="age-table-title">Ariella's Age at Upcoming Events</div>
+      ${ageRows}
+      ${upcoming.length > 6 ? `<div class="age-more">+ ${upcoming.length - 6} more events</div>` : ""}
+    </div>
+
+    <div class="troop-grid">
+      <div class="troop-col-card">
+        <div class="troop-col-header">🌼 Girl Scouts <span class="troop-count">${TROOP_GIRLS.length}</span></div>
+        ${TROOP_GIRLS.map(memberCard).join("")}
+      </div>
+      <div class="troop-col-card">
+        <div class="troop-col-header">👤 Adults &amp; Parents <span class="troop-count">${TROOP_ADULTS.length}</span></div>
+        ${TROOP_ADULTS.map(name => `
+          <div class="member-card">
+            <div class="avatar adult-avatar" style="background:${avatarColor(name)}">${initials(name)}</div>
+            <div class="member-name">${name}</div>
+          </div>`).join("")}
+      </div>
+    </div>`;
+}
+
 // ── WIRE UP ───────────────────────────────────────────────────────────────────
 
 // Header stats
@@ -591,3 +715,4 @@ document.querySelectorAll(".filter-btn").forEach(btn => {
 
 renderCalendar();
 renderChallenge();
+renderTroop();
