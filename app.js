@@ -168,6 +168,49 @@ const EVENTS = [
     venue: "The Ravine", address: "2301 Airport Road, Paso Robles, CA 93446",
     note: "$42/person — Ariella + 1 adult chaperone = $84 total. Check-in 10:30 AM at Upper Parking Lot. Bring sunscreen, towel, swimwear. Pizza + drink included. No outside food.",
   },
+  // ── Events from June council email ──────────────────────────────────────────
+  {
+    id: 25, program: "Gone Fishin' — Ventura Pier", badge: "Fishing Fun Patch", level: "All Levels",
+    date: "2026-06-20", start: "9:00 AM", end: "12:00 PM", spots: null,
+    cost: 35, registration: true, registrationCloses: "2026-06-15",
+    venue: "Ventura Pier", address: "668 Harbor Blvd, Ventura, CA 93001",
+    note: "3-hour pier adventure: fishing, knot tying, baiting, and casting plus wildlife and coastal stewardship. Located in Ventura.",
+  },
+  {
+    id: 26, program: "Power of Produce — Moorpark Farm", badge: "Power of Produce Patch", level: "All Levels",
+    date: "2026-07-03", start: "1:30 PM", end: "3:30 PM", spots: null,
+    cost: 18, registration: true, registrationCloses: "2026-06-28",
+    venue: "Farm in Moorpark", address: "Moorpark, CA 93021",
+    note: "Strawberry picking + seasonal veggie harvest, animal center visit, tractor wagon ride. Includes 1-lb strawberries and veggies to take home. Confirm address at registration.",
+  },
+  {
+    id: 27, program: "Wild Encounters — Moorpark Teaching Zoo", badge: "Special Patch", level: "All Levels",
+    date: "2026-08-15", start: "10:15 AM", end: "12:00 PM", spots: null,
+    cost: 16, registration: true, registrationCloses: "2026-08-10",
+    venue: "Moorpark Teaching Zoo", address: "7075 Campus Rd, Moorpark, CA 93021",
+    note: "Hands-on animal care, Animal Ambassador presentation, zoo scavenger hunt, training demos. Adults and tagalongs $12.",
+  },
+  {
+    id: 28, program: "Gone Fishin' — Port Hueneme Pier", badge: "Fishing Fun Patch", level: "All Levels",
+    date: "2026-08-22", start: "9:00 AM", end: "12:00 PM", spots: null,
+    cost: 35, registration: true, registrationCloses: "2026-08-17",
+    venue: "Port Hueneme Pier", address: "350 W Surfside Dr, Port Hueneme, CA 93041",
+    note: "3-hour pier adventure: fishing, knot tying, baiting, and casting plus wildlife and coastal stewardship. Located in Port Hueneme.",
+  },
+  {
+    id: 29, program: "GS Night — SF Giants vs. Detroit Tigers", badge: "(Special Event)", level: "All Levels",
+    date: "2026-08-09", start: "1:05 PM", end: "TBD", spots: null,
+    cost: 56, registration: true, registrationCloses: null,
+    venue: "Oracle Park", address: "24 Willie Mays Plaza, San Francisco, CA 94107",
+    note: "GS Council organized tickets. Register through GSCCC MLB ticket link. Note: same day as LA Sparks game.",
+  },
+  {
+    id: 30, program: "GS Night — LA Dodgers vs. Cincinnati Reds", badge: "(Special Event)", level: "All Levels",
+    date: "2026-09-06", start: "7:10 PM", end: "TBD", spots: null,
+    cost: 54, registration: true, registrationCloses: "2026-09-01",
+    venue: "Dodger Stadium", address: "1000 Vin Scully Ave, Los Angeles, CA 90012",
+    note: "GS Council organized tickets. Register through GSCCC MLB ticket link.",
+  },
 ];
 
 const ACTIVITIES = [
