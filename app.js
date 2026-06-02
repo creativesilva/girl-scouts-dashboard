@@ -168,6 +168,13 @@ const EVENTS = [
     venue: "The Ravine", address: "2301 Airport Road, Paso Robles, CA 93446",
     note: "$42/person — Ariella + 1 adult chaperone = $84 total. Check-in 10:30 AM at Upper Parking Lot. Bring sunscreen, towel, swimwear. Pizza + drink included. No outside food.",
   },
+  {
+    id: 31, program: "Ranch Adventure Day Camp", badge: "Day Camp — Blazing My Own Trail", level: "All Levels",
+    date: "2026-07-20", start: "9:00 AM", end: "3:00 PM", spots: null,
+    cost: 35, registration: true, registrationCloses: "2026-06-05",
+    venue: "Rancho Oaks Day Camp", address: "San Luis Obispo, CA 93401",
+    note: "Week-long day camp Jul 20–24. Choose 1–5 days — each day is a standalone experience. Multi-day discounts at checkout. Activities: leather work, archery, cooking skills, knife skills. Health & permission forms required to finalize. Contact: RanchoOaksDaycamp@gmail.com",
+  },
   // ── Events from June council email ──────────────────────────────────────────
   {
     id: 25, program: "Gone Fishin' — Ventura Pier", badge: "Fishing Fun Patch", level: "All Levels",
